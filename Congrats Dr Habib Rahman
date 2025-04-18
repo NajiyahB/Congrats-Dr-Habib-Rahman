@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Congratulations Dr. Habib Rahman!</title>
+  <style>
+    body {
+      background: #3f9bbf;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      overflow: hidden;
+    }
+    .message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      z-index: 2;
+    }
+    .message h1 {
+      font-size: 2.5em;
+      color: #2b6cb0;
+      margin: 0;
+    }
+    .message p {
+      font-size: 1.5em;
+      color: #2d3748;
+      margin-top: 20px;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    .floating-icon, .balloon, .emoji {
+      position: fixed;
+      width: 64px;
+      height: 64px;
+      z-index: 1;
+      animation: bounce 8s ease-in-out infinite;
+    }
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: red;
+      animation: confetti-fall 5s linear infinite;
+      opacity: 0.8;
+      z-index: 1;
+    }
+    @keyframes bounce {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(60px, -100px) rotate(10deg); }
+      50% { transform: translate(-80px, -150px) rotate(-10deg); }
+      75% { transform: translate(60px, -80px) rotate(10deg); }
+      100% { transform: translate(0, 0); }
+    }
+    @keyframes confetti-fall {
+      0% { top: -10%; }
+      100% { top: 110%; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fireworks"></canvas>
+  <div class="message">
+    <h1>Congratulations!</h1>
+    <p>Well done on completing your medical degree, Dr. Habib Rahman!</p>
+  </div>
+
+  <!-- Icons -->
+  <img src="https://img.icons8.com/color/48/stethoscope.png" class="floating-icon" style="left: 10%; top: 70%; animation-delay: 0s;">
+  <img src="https://img.icons8.com/color/48/syringe.png" class="floating-icon" style="left: 30%; top: 60%; animation-delay: 2s;">
+  <img src="https://img.icons8.com/color/48/pill.png" class="floating-icon" style="left: 70%; top: 75%; animation-delay: 1s;">
+  <img src="https://img.icons8.com/color/48/microscope.png" class="floating-icon" style="left: 90%; top: 55%; animation-delay: 3s;">
+  <img src="https://img.icons8.com/color/48/graduation-cap.png" class="floating-icon" style="left: 20%; top: 50%; animation-delay: 5s;">
+  <img src="https://img.icons8.com/color/48/diploma.png" class="floating-icon" style="left: 80%; top: 40%; animation-delay: 6s;">
+
+  <!-- Emoji -->
+  <img src="https://img.icons8.com/emoji/48/party-popper.png" class="emoji" style="left: 5%; top: 20%; animation-delay: 1s;">
+
+  <script>
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let fireworks = [];
+
+    class Firework {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height;
+        this.targetY = Math.random() * canvas.height / 2;
+        this.radius = 2;
+        this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+        this.velocity = - (5 + Math.random() * 5);
+        this.exploded = false;
+        this.particles = [];
+      }
+
+      update() {
+        if (!this.exploded) {
+          this.y += this.velocity;
+          if (this.y <= this.targetY) {
+            this.exploded = true;
+            this.createParticles();
+          }
+        } else {
+          this.particles.forEach(p => p.update());
+          this.particles = this.particles.filter(p => p.alpha > 0);
+        }
+      }
+
+      draw() {
+        if (!this.exploded) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        } else {
+          this.particles.forEach(p => p.draw());
+        }
+      }
+
+      createParticles() {
+        const count = 80;
+        for (let i = 0; i < count; i++) {
+          this.particles.push(new Particle(this.x, this.y, this.color));
+        }
+      }
+    }
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.radius = 2 + Math.random();
+        this.color = color;
+        this.alpha = 1;
+        this.velocityX = (Math.random() - 0.5) * 8;
+        this.velocityY = (Math.random() - 0.5) * 8;
+      }
+
+      update() {
+        this.x += this.velocityX;
+        this.y += this.velocityY;
+        this.alpha -= 0.015;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function animate() {
+      ctx.fillStyle = 'rgba(63, 155, 191, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (Math.random() < 0.15) {
+        fireworks.push(new Firework());
+      }
+
+      fireworks.forEach(firework => {
+        firework.update();
+        firework.draw();
+      });
+
+      fireworks = fireworks.filter(fw => !fw.exploded || fw.particles.length > 0);
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    function launchConfetti() {
+      for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+        confetti.style.animationDuration = (3 + Math.random() * 2) + 's';
+        confetti.style.top = '-10px';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+
+    setInterval(launchConfetti, 1500);
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
