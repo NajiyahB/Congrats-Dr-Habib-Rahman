@@ -44,14 +44,14 @@
       width: 64px;
       height: 64px;
       z-index: 1;
-      animation: bounce 8s ease-in-out infinite;
+      animation: bounce 6s ease-in-out infinite; /* Reduced animation duration */
     }
     .confetti {
       position: fixed;
       width: 10px;
       height: 10px;
       background: red;
-      animation: confetti-fall 5s linear infinite;
+      animation: confetti-fall 3s linear infinite; /* Shortened animation duration */
       opacity: 0.8;
       z-index: 1;
     }
@@ -131,7 +131,7 @@
       }
 
       createParticles() {
-        const count = 80;
+        const count = 60;  // Reduced number of particles to help with performance
         for (let i = 0; i < count; i++) {
           this.particles.push(new Particle(this.x, this.y, this.color));
         }
@@ -145,14 +145,14 @@
         this.radius = 2 + Math.random();
         this.color = color;
         this.alpha = 1;
-        this.velocityX = (Math.random() - 0.5) * 8;
-        this.velocityY = (Math.random() - 0.5) * 8;
+        this.velocityX = (Math.random() - 0.5) * 6;  // Reduced speed for particles
+        this.velocityY = (Math.random() - 0.5) * 6;  // Reduced speed for particles
       }
 
       update() {
         this.x += this.velocityX;
         this.y += this.velocityY;
-        this.alpha -= 0.015;
+        this.alpha -= 0.02;  // Adjust alpha decay to make the particles fade quicker
       }
 
       draw() {
@@ -172,7 +172,7 @@
       ctx.fillStyle = 'rgba(63, 155, 191, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      if (Math.random() < 0.15) {
+      if (Math.random() < 0.1) {  // Reduce frequency of new fireworks to help with performance
         fireworks.push(new Firework());
       }
 
@@ -189,7 +189,7 @@
     animate();
 
     function launchConfetti() {
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 20; i++) {  // Reduced confetti amount
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
         confetti.style.left = Math.random() * 100 + 'vw';
@@ -197,11 +197,11 @@
         confetti.style.animationDuration = (3 + Math.random() * 2) + 's';
         confetti.style.top = '-10px';
         document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 5000);
+        setTimeout(() => confetti.remove(), 4000);  // Reduced confetti lifetime
       }
     }
 
-    setInterval(launchConfetti, 1500);
+    setInterval(launchConfetti, 2000);  // Reduced frequency of confetti
 
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
@@ -210,3 +210,4 @@
   </script>
 </body>
 </html>
+
